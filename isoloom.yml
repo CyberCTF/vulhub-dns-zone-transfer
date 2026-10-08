@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://www.isoloom.com/schema/v1.json
+# DNS zone transfer (Vulhub, by phith0n and the Vulhub contributors) as an Isoloom spec:
+# Vulhub's dns/dns-zone-transfer, vendored in build/dns/app/: the published image
+# vulhub/bind:9.10.3 with Vulhub's zone files copied in (build/dns/).
+# `isoloom generate`, then `isoloom run docker`.
+version: 1
+name: vulhub-dns-zone-transfer
+
+networks:
+  lab: { cidr: 10.61.32.0/24, internet: false }
+
+machines:
+  dns:
+    networks: { lab: 10 }
+    services: [{ port: 53, name: dns, publish: 53 }]
+    resources: { cpus: 1, memory_mb: 128 }
+    docker:
+      build: build/dns
+
+checks:
+  - name: the DNS server answers over TCP
+    tcp: dns:53
+    wait: 60
+  - name: the server is authoritative for vulhub.org
+    script: checks/dns.sh
+    wait: 30
+
+message: |
+  A DNS server answers on 127.0.0.1:{{ machines.dns.services.0.publish }} (TCP; UDP inside the lab network) for the zone vulhub.org.
+  What does it give to anyone who asks for the whole zone?

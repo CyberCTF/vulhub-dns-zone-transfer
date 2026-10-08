@@ -1,0 +1,144 @@
+{
+  "generated_by_isoloom": "from isoloom.yml; don't edit: change the spec and run `isoloom generate` (`isoloom check` fails when this file is out of date)",
+  "resolved_version": 1,
+  "name": "vulhub-dns-zone-transfer",
+  "instance": null,
+  "inputs": [],
+  "networks": {
+    "lab": {
+      "cidr": "10.61.32.0/24",
+      "docker_cidr": "10.61.32.0/24",
+      "internet": false,
+      "gateway": null,
+      "gateway_address": "10.61.32.1",
+      "router": null,
+      "controller": "10.61.32.253"
+    }
+  },
+  "reach": [],
+  "machines": {
+    "dns": {
+      "access": false,
+      "supplied": false,
+      "shapes": [
+        "docker"
+      ],
+      "arch": "amd64",
+      "os": null,
+      "windows": false,
+      "addresses": {
+        "lab": "10.61.32.10"
+      },
+      "docker_addresses": {
+        "lab": "10.61.32.10"
+      },
+      "services": [
+        {
+          "port": 53,
+          "name": "dns",
+          "http": false,
+          "publish": 53
+        }
+      ],
+      "depends_on": [],
+      "inputs": [],
+      "volumes": {},
+      "resources": {
+        "cpus": 1,
+        "memory_mb": 128,
+        "disk_gb": 20
+      },
+      "gateway_of": [],
+      "routes": [],
+      "default_gateway": null,
+      "offline": true
+    }
+  },
+  "start_order": [
+    "dns"
+  ],
+  "clones": {},
+  "tools": {},
+  "groups": {},
+  "router": null,
+  "controller": {
+    "addresses": {
+      "lab": "10.61.32.253"
+    }
+  },
+  "published": [
+    {
+      "machine": "dns",
+      "port": 53,
+      "host_port": 53
+    }
+  ],
+  "targets": {
+    "possible": [
+      "docker",
+      "hosted",
+      "docker-vm",
+      "cloud-docker",
+      "kubernetes"
+    ],
+    "generated": [
+      "docker",
+      "hosted",
+      "docker-vm",
+      "cloud-docker",
+      "kubernetes"
+    ],
+    "refused": {},
+    "not_possible": {
+      "hybrid": "only when some machines are containers and others are VMs",
+      "vagrant": "needs `vm:` on dns",
+      "proxmox": "needs `vm:` on dns",
+      "cloud-vm": "needs `vm:` on dns",
+      "external": "needs `external:` on dns"
+    }
+  },
+  "checks": {
+    "default_position": "networks",
+    "positions": [
+      {
+        "position": "networks",
+        "machine": null,
+        "runner": "isoloom-check",
+        "checks": [
+          {
+            "name": "the DNS server answers over TCP",
+            "derived": false,
+            "kind": "tcp",
+            "target": "dns:53",
+            "expect": "open",
+            "wait": 60
+          },
+          {
+            "name": "the server is authoritative for vulhub.org",
+            "derived": false,
+            "kind": "script",
+            "target": "checks/dns.sh",
+            "expect": "",
+            "wait": 30
+          }
+        ]
+      },
+      {
+        "position": "dns",
+        "machine": "dns",
+        "runner": "isoloom-check-dns",
+        "checks": [
+          {
+            "name": "no internet from dns",
+            "derived": true,
+            "kind": "http",
+            "target": "http://1.1.1.1/",
+            "expect": "blocked",
+            "wait": 0
+          }
+        ]
+      }
+    ]
+  },
+  "message": "A DNS server answers on 127.0.0.1:53 (TCP; UDP inside the lab network) for the zone vulhub.org.\nWhat does it give to anyone who asks for the whole zone?\n"
+}
