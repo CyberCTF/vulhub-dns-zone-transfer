@@ -4,11 +4,5 @@
   "question": "Use a zone transfer to list every record of the vulhub.org zone and find the flag.",
   "category": "NETWORK",
   "difficulty": 1,
-  "evidence_kind": "SECRET",
-  "capabilities": [
-    "dns-enumeration",
-    "zone-transfer",
-    "information-disclosure",
-    "reconnaissance"
-  ]
+  "evidence_kind": "SECRET"
 }
