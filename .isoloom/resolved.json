@@ -94,7 +94,8 @@
       "vagrant": "needs `vm:` on dns",
       "proxmox": "needs `vm:` on dns",
       "cloud-vm": "needs `vm:` on dns",
-      "external": "needs `external:` on dns"
+      "external": "needs `external:` on dns",
+      "cloud-services": "left out by `targets:`"
     }
   },
   "checks": {
