@@ -45,7 +45,7 @@ provider "google" {
 # A project of its own when none is given: everything goes when the environment is destroyed.
 resource "google_project" "env" {
   count               = var.project == "" ? 1 : 0
-  name                = "isoloom-vulhub-dns-zone-transfer"
+  name                = "isoloom-vulhub-dns-zone-transf"
   project_id          = "isoloom-${terraform_data.id.output}"
   billing_account     = var.billing_account
   org_id              = var.org_id == "" ? null : var.org_id
