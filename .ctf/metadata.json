@@ -1,8 +1,1 @@
-{
-  "title": "DNS Zone Transfer (AXFR) Information Disclosure",
-  "description": "A BIND 9.10.3 server authoritative for vulhub.org with no allow-transfer setting: an AXFR request from any address returns every record of the zone, revealing hosts that are not otherwise published.",
-  "question": "Use a zone transfer to list every record of the vulhub.org zone and find the flag.",
-  "category": "NETWORK",
-  "difficulty": 1,
-  "evidence_kind": "SECRET"
-}
+{"title": "DNS Zone Transfer (AXFR) Information Disclosure", "description": "A BIND 9.10.3 server authoritative for vulhub.org with no allow-transfer setting: an AXFR request from any address returns every record of the zone, revealing hosts that are not otherwise published.", "question": "Use a zone transfer (AXFR) to list every record of vulhub.org and find the flag among them.", "category": "NETWORK", "difficulty": 1, "evidence_kind": "SECRET"}

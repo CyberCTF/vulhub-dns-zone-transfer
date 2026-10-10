@@ -1,0 +1,63 @@
+{
+  "objectives": [
+    {
+      "key": "main",
+      "title": "Read the flag",
+      "prompt": "Ask the DNS server for the whole vulhub.org zone and find the flag in its records.",
+      "check": {
+        "evidence": "SECRET",
+        "format": "FLAG{%s}"
+      },
+      "dev": "FLAG{dev-vulhub-dns-zone-transfer}",
+      "hints": [
+        "The server is authoritative for vulhub.org and does not restrict who may request a zone transfer.",
+        "A zone transfer is a query of type AXFR over TCP. Read every record type that comes back, not only the A records."
+      ],
+      "steps": [
+        {
+          "key": "qtype",
+          "title": "Name the query",
+          "prompt": "Which DNS query type asks for a full copy of a zone? (acronym)",
+          "check": {
+            "answer": [
+              "axfr"
+            ]
+          }
+        },
+        {
+          "key": "transport",
+          "title": "Name the transport",
+          "prompt": "Over which transport protocol does a zone transfer run?",
+          "check": {
+            "answer": [
+              "tcp"
+            ]
+          }
+        },
+        {
+          "key": "software",
+          "title": "Identify the server",
+          "prompt": "Which DNS server software answers? (product name)",
+          "check": {
+            "answer": [
+              "bind",
+              "bind9",
+              "bind 9",
+              "isc bind"
+            ]
+          }
+        },
+        {
+          "key": "rtype",
+          "title": "Find the flag",
+          "prompt": "Which record type holds the flag?",
+          "check": {
+            "answer": [
+              "txt"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

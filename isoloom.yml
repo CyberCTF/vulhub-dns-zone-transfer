@@ -6,6 +6,9 @@
 version: 1
 name: vulhub-dns-zone-transfer
 
+# Given by the CyberCTF launcher: this player's flag. Without it the development flag.
+inputs: [CTF_FLAG_MAIN]
+
 networks:
   lab: { cidr: 10.61.32.0/24, internet: false }
 
@@ -14,8 +17,11 @@ machines:
     networks: { lab: 10 }
     services: [{ port: 53, name: dns, publish: 53 }]
     resources: { cpus: 1, memory_mb: 128 }
+    inputs: [CTF_FLAG_MAIN]
+    volumes: { ctf: /ctf }   # the zone file part holding the flag, written by ctf/flag.sh at every start
     docker:
       build: build/dns
+      init: [ctf/flag.sh]
 
 checks:
   - name: the DNS server answers over TCP
