@@ -7,21 +7,28 @@ version: 1
 name: vulhub-dns-zone-transfer
 
 # Given by the CyberCTF launcher: this player's flag. Without it the development flag.
-inputs: [CTF_FLAG_MAIN]
+inputs:
+  CTF_FLAG_MAIN: {}
 
 networks:
-  lab: { cidr: 10.61.32.0/24, internet: false }
+  lab: {cidr: 10.61.32.0/24, internet: false}
 
 machines:
   dns:
-    networks: { lab: 10 }
-    services: [{ port: 53, name: dns, publish: 53 }]
-    resources: { cpus: 1, memory_mb: 128 }
-    inputs: [CTF_FLAG_MAIN]
-    volumes: { ctf: /ctf }   # the zone file part holding the flag, written by ctf/flag.sh at every start
-    docker:
+    networks: {lab: 10}
+    resources: {cpus: 1, memory_mb: 128}
+    volumes: {ctf: /ctf}     # the zone file part holding the flag, written by ctf/flag.sh at every start
+    ports:
+      dns:
+        port: 53
+        publish: true
+    files:
+      - path: /run/lab/ctf_flag_main
+        input: CTF_FLAG_MAIN
+    setup:
+      - ctf/flag.sh
+    app:
       build: build/dns
-      init: [ctf/flag.sh]
 
 checks:
   - name: the DNS server answers over TCP
@@ -32,5 +39,5 @@ checks:
     wait: 30
 
 message: |
-  A DNS server answers on 127.0.0.1:{{ machines.dns.services.0.publish }} (TCP; UDP inside the lab network) for the zone vulhub.org.
+  A DNS server answers on 127.0.0.1:{{ machines.dns.ports.dns.published }} (TCP; UDP inside the lab network) for the zone vulhub.org.
   What does it give to anyone who asks for the whole zone?
